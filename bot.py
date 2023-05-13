@@ -33,6 +33,18 @@ from aiogram.dispatcher import FSMContext
 from pathlib import Path
 import keyboard as kb
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
+
+
+# привязка по жанрам. 
+# автообновление глав
+# 
+#
+#
+
+
+
+
+
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
 dp.middleware.setup(LoggingMiddleware())
@@ -294,7 +306,7 @@ async def try1(message: types.message):
     genres_button = InlineKeyboardButton(text = 'жанры', callback_data='genres_list')
 
     start_kb.keyboard.insert(all_titles_button)
-    #start_kb.keyboard.insert(genres_button)
+    start_kb.keyboard.insert(genres_button)
 
 
 
@@ -361,10 +373,11 @@ async def genres_list(call: CallbackQuery):
     async def process_video_command(call: CallbackQuery):
         genre_name = call.data 
         accepted_manhwa = df.find_manhwa_genre(genre_name)
+        u_accepted_manhwa  = df.u_find_manhwa_genre(genre_name)
         manhwa_in_genre = InlineKeyboardMarkup(row_width=1)
         i = 0 
         while i<len(accepted_manhwa):
-            button =  InlineKeyboardButton(text = accepted_manhwa[i], callback_data = accepted_manhwa[i])
+            button =  InlineKeyboardButton(text = u_accepted_manhwa[i], callback_data = accepted_manhwa[i])
             manhwa_in_genre.insert(button)
             i+=1
         back_to_main_menu = InlineKeyboardButton(text = '🔙', callback_data='back_to_main_menu')
