@@ -15,11 +15,11 @@ def images_to_pdf(input_directory):
         images = []
         for file_name in sorted(os.listdir(folder_path), key=lambda x: int(x.split('.')[0]) if x.split('.')[0].isdigit() else float('inf')):
 
-            if file_name.endswith('.jpeg') or file_name.endswith('.jpg') :
+            if file_name.endswith('.jpeg') or file_name.endswith('.jpg'):
                 image_path = os.path.join(folder_path, file_name)
                 try:
                     image = Image.open(image_path)
-                    image.convert('RGB')
+                    image = image.convert("RGB")  # Преобразование в режим RGB
                     images.append(image)
                 except (IOError, SyntaxError):
                     raise IOError(f"Ошибка открытия файла {image_path}")

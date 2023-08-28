@@ -13,7 +13,7 @@ from aiohttp import ClientSession, TCPConnector
 
 from config import TOKEN, MY_ID, DB_FILENAME
 client = MongoClient("mongodb+srv://noema:658Vobisi@check.8n3yvam.mongodb.net/?retryWrites=true&w=majority")
-db=client["Check"]
+db=client["Check-dubler"]
 manhwa_data = db['manhwa']
 manhwa_chapters = db['ex']
 logging.basicConfig(format=u'%(filename)s [ LINE:%(lineno)+3s ]#%(levelname)+8s [%(asctime)s]  %(message)s',
