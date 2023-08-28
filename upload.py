@@ -13,7 +13,7 @@ from aiohttp import ClientSession, TCPConnector
 
 from config import TOKEN, MY_ID, DB_FILENAME
 client = MongoClient("mongodb+srv://noema:658Vobisi@check.8n3yvam.mongodb.net/?retryWrites=true&w=majority")
-db=client["Check"]
+db=client["Check-dubler"]
 manhwa_data = db['manhwa']
 manhwa_chapters = db['ex']
 logging.basicConfig(format=u'%(filename)s [ LINE:%(lineno)+3s ]#%(levelname)+8s [%(asctime)s]  %(message)s',
@@ -109,7 +109,11 @@ async def uploadMediaFiles(name, path, method, file_attr):
                         'Couldn\'t upload {}. Error is {}'.format(filename, e))
                 else:
                     filename = str(filename).replace('.pdf', '')
-                    df.add_chapters_to_storage(name, int(filename), file_id)
+                    try:
+                        df.add_chapters_to_storage(name, int(filename), file_id)
+                    except ValueError as e:
+                        print(f"Ошибка при вызове функции df.add_chapters_to_storage: {e}")
+
                     test_dict[filename] = file_id
                     f.write(filename+": '"+ file_id + "', " + "\n")
                 finally:

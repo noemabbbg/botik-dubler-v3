@@ -6,7 +6,7 @@ class ReprDict(dict):
     def __repr__(self):
         return "\n".join(f"{k}: {v}" for k, v in self.items())
 client = MongoClient("mongodb+srv://noema:658Vobisi@check.8n3yvam.mongodb.net/?retryWrites=true&w=majority")
-db=client["Check"]
+db=client["Check-dubler"]
 manhwa_data = db['smanhwa']
 manhwa_chapters = db['ex']
 
@@ -33,7 +33,7 @@ def add_manhwa_by_scraper(name, test_dict):
      manhwa_scrapped.insert_one({
         "name": name,
         "u_name": P.u_name,
-        "picture": "AgACAgIAAxkBAAEBdHxkXQx3skOe2qzCeECdQ-FRu154NgACgNMxG6ns6Eo9XR-yivabOAEAAwIAA3MAAy8E",
+        "picture": P.title_picture,
         "description": P.description,
         "number_of_chapters": P.number_of_chapters,
         "release_year":P.release_year ,
@@ -76,6 +76,13 @@ def available_genres():
 
 def available_manhwa():
     new = db['smanhwa']
+    manhwa = list(new.find({}))
+    def_list =  [user['name'] for user in manhwa]
+    u_list = [user['u_name'] for user in manhwa]
+    return def_list
+
+def user_bookmarks():   ####доделать как будет добавлено 
+    new = db['users']
     manhwa = list(new.find({}))
     def_list =  [user['name'] for user in manhwa]
     u_list = [user['u_name'] for user in manhwa]
@@ -192,6 +199,8 @@ def u_find_manhwa_genre(genre_name):
     return accepted_manhwa 
     
 # сравниваю жанр манхвы со всеми жанрами.
+ik = u_find_manhwa_genre('приключения')
+print(ik)
 
 
 
@@ -264,6 +273,25 @@ def get_selected_manhwa(user_id):
     photo = new.find_one({'user_id': f"{user_id}" }, {'selected_manhwa':1, '_id':0})
     photo_new = str(photo).replace('{', '').replace('}', '').replace("'", '').replace(":", '').replace("selected_manhwa", '').replace(" ", '')
     return photo_new
+
+
+
+
+def add_chapter_by_u_name(u_name, chapter_number, chapter_data):
+    new = db["smanhwa"]
+    document = new.find_one({"u_name": u_name})
+    
+    if document:
+        chapters = document.get("chapters", {})
+        chapters[chapter_number] = chapter_data
+        new_number_of_chapters = int(document.get("number_of_chapters", 0)) + 1
+        new.update_one(
+            {"u_name": u_name},
+            {"$set": {"chapters": chapters, "number_of_chapters": str(new_number_of_chapters)}}
+        )
+        print("Chapter added successfully.")
+    else:
+        print(f"No document found with u_name: {u_name}")
 
 def add_chapters_to_storage(name, chapter_number, chapter_id): #либо хреначить по манхва ид либо по нейму  
     manhwa_chapters = db[f"{name}"]
