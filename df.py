@@ -6,7 +6,7 @@ class ReprDict(dict):
     def __repr__(self):
         return "\n".join(f"{k}: {v}" for k, v in self.items())
 client = MongoClient("mongodb+srv://noema:658Vobisi@check.8n3yvam.mongodb.net/?retryWrites=true&w=majority")
-db=client["Check"]
+db=client["Check-dubler"]
 manhwa_data = db['smanhwa']
 manhwa_chapters = db['ex']
 
